@@ -7,15 +7,15 @@ from time import sleep
 # start -> gera_1_evento
 
 # evento -> 1 ou mais eventos e start no mais proximo
-agenda = []
-aleatorios = [0.1195, 0.3491, 0.9832]
 eventos = [
     # Comentei esta linha, ja que o pipe faz um TypeError ao usar strings
-    # {'evento': 'chX' | 'saX', 'tempo': 1, 'sorteio': 1},
+    {'evento': 'ch', 'tempo': 3, 'sorteio': 1},
 ]
 fila = 0
-tempo_global = 0
+k = 3 # tamanho da fila 
 
+tempo_chegada = 1
+tempo_saida = 2
 
 # variaveis usadas na geracao de numeros aleatorios
 x_anterior = 19
@@ -24,6 +24,15 @@ a = 500
 c = 4
 quantidade_iteracoes = 0
 
+def get_next_evento():
+    global eventos
+    next_evento = eventos.pop(0)
+    for evento in eventos:
+        if evento['tempo'] < next_evento['tempo']:
+            eventos.append(next_evento)
+            next_evento = evento
+            eventos.remove(evento)
+    return next_evento
 
 def congruente_linear():
     global x_anterior, M, c, a, quantidade_iteracoes
@@ -37,11 +46,11 @@ def congruente_linear():
 
 
 def agenda_chegada(tempo, sorteio):
-    agenda.append({'evento': 'ch', 'tempo': tempo + sorteio, 'sorteio': sorteio})
+    eventos.append({'evento': 'ch', 'tempo': tempo + sorteio, 'sorteio': sorteio})
 
 
 def agenda_saida(tempo, sorteio):
-    agenda.append({'evento': 'sa', 'tempo': tempo + sorteio, 'sorteio': sorteio})
+    eventos.append({'evento': 'sa', 'tempo': tempo + sorteio, 'sorteio': sorteio})
 
 
 def start():
@@ -49,23 +58,32 @@ def start():
 
 
 def eventoCH(evento):
-    eventos.append({'evento': 'ch', 'fila': fila, 'tempo': tempo_global})  # + tempo em cada estado da fila
-    agenda_chegada()
+    global fila
+    # contabiliza 
+    print('chegou ' + str(fila) + ' no tempo - ' + str(evento['tempo']))
+    if fila < k:
+        fila += 1
+        if fila <= 1:
+            agenda_saida(evento['tempo'],tempo_saida)
+    agenda_chegada(evento['tempo'],tempo_chegada)
 
 
 def eventoSA(evento):
-    eventos.append({'evento': 'sa', 'fila': fila, 'tempo': tempo_global})  # + tempo em cada estado da fila
-    agenda_saida()
+    global fila
+    # contabiliza
+    print('saindo ' + str(fila) + ' no tempo - ' + str(evento['tempo']))
+    fila -= 1
+    if fila >= 1:
+        agenda_saida(evento['tempo'],tempo_saida)
 
 
-# Comentado para testar o gerador do numeros aleatorios
-# while True:
-#     next_evento = agenda.pop(0)
-#     tempo_global = next_evento.tempo
-#     if next_evento.evento == 'ch':
-#         eventoCH(next_evento)
-#     else:
-#         eventoSA(next_evento)
+while True:
+    next_evento = get_next_evento()
+    tempo_global = next_evento['tempo']
+    if next_evento['evento'] == 'ch':
+        eventoCH(next_evento)
+    else:
+        eventoSA(next_evento)
 
 
 # Teste do gerador de numero aleatorios
