@@ -1,21 +1,27 @@
 from time import sleep
 
-# tempo_global
-# tabela_eventos
-# simulador
+# variaveis da fila
+fila = 0
+k = 10 # tamanho da fila 
 
-# start -> gera_1_evento
-
-# evento -> 1 ou mais eventos e start no mais proximo
+interacoes = 10000
+perda = 0
+# agenda de eventos
 eventos = [
     # Comentei esta linha, ja que o pipe faz um TypeError ao usar strings
-    {'evento': 'ch', 'tempo': 3, 'sorteio': 1},
+    {'evento': 'ch', 'tempo': 1, 'sorteio': 1},
 ]
-fila = 0
-k = 3 # tamanho da fila 
 
-tempo_chegada = 1
-tempo_saida = 2
+estados = {}
+for i in range(k+1):
+    estados[i] = 0
+
+# parametros para aleatorios
+max_chegada = 10
+min_chegada = 3
+
+max_saida = 8
+min_saida = 3
 
 # variaveis usadas na geracao de numeros aleatorios
 x_anterior = 19
@@ -36,7 +42,6 @@ def get_next_evento():
 
 def congruente_linear():
     global x_anterior, M, c, a, quantidade_iteracoes
-
     quantidade_iteracoes = quantidade_iteracoes + 1
     # Resto da divisao em python 3 usamos o %. Se python 2, / direto
     x_atual = (a * x_anterior + c) % M
@@ -58,35 +63,52 @@ def start():
 
 
 def eventoCH(evento):
-    global fila
+    global fila, perda
     # contabiliza 
-    print('chegou ' + str(fila) + ' no tempo - ' + str(evento['tempo']))
+    print('chegada, fila:' + str(fila+1) + ' no tempo - ' + str(evento['tempo']))
     if fila < k:
+        estados[fila] = estados[fila] + evento['sorteio']
         fila += 1
         if fila <= 1:
-            agenda_saida(evento['tempo'],tempo_saida)
-    agenda_chegada(evento['tempo'],tempo_chegada)
+            agenda_saida(evento['tempo'],(max_saida - min_saida) * congruente_linear() + min_saida)
+    else:
+        perda += 1
+    agenda_chegada(evento['tempo'], (max_chegada - min_chegada) * congruente_linear() + min_chegada)
 
 
 def eventoSA(evento):
     global fila
     # contabiliza
-    print('saindo ' + str(fila) + ' no tempo - ' + str(evento['tempo']))
+    print('saindo, fila:' + str(fila+1) + ' no tempo - ' + str(evento['tempo']))
+    estados[fila] = estados[fila] + evento['sorteio']
     fila -= 1
     if fila >= 1:
-        agenda_saida(evento['tempo'],tempo_saida)
+        agenda_saida(evento['tempo'],(max_saida - min_saida) * congruente_linear() + min_saida)
 
-
+i = 0
 while True:
+    if i >= interacoes:
+        break
+    i += 1
     next_evento = get_next_evento()
-    tempo_global = next_evento['tempo']
     if next_evento['evento'] == 'ch':
         eventoCH(next_evento)
     else:
         eventoSA(next_evento)
 
+N = 0
+for i in estados.items():
+    N += i[1]
+for i in range(k+1):
+    estados[i] = estados[i] / N * 100
+print(estados)
+{print('{0:.2f}%'.format(i)) for i in estados.values()}
+print('perda : {}'.format(perda))
+
 
 # Teste do gerador de numero aleatorios
-while True:
-    print(quantidade_iteracoes, ' - ', congruente_linear())
-    sleep(0.01)
+# while True:
+#     print(quantidade_iteracoes, ' - ', congruente_linear())
+#     sleep(0.01)
+
+
