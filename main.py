@@ -30,15 +30,6 @@ a = 500
 c = 4
 quantidade_iteracoes = 0
 
-def get_next_evento():
-    global eventos
-    next_evento = eventos.pop(0)
-    for evento in eventos:
-        if evento['tempo'] < next_evento['tempo']:
-            eventos.append(next_evento)
-            next_evento = evento
-            eventos.remove(evento)
-    return next_evento
 
 def congruente_linear():
     global x_anterior, M, c, a, quantidade_iteracoes
@@ -61,7 +52,18 @@ def agenda_saida(tempo, sorteio):
 def start():
     agenda_chegada(0, 2.5)
 
+# fila
+def get_next_evento():
+    global eventos
+    next_evento = eventos.pop(0)
+    for evento in eventos:
+        if evento['tempo'] < next_evento['tempo']:
+            eventos.append(next_evento)
+            next_evento = evento
+            eventos.remove(evento)
+    return next_evento
 
+# fila
 def eventoCH(evento):
     global fila, perda
     # contabiliza 
@@ -75,7 +77,7 @@ def eventoCH(evento):
         perda += 1
     agenda_chegada(evento['tempo'], (max_chegada - min_chegada) * congruente_linear() + min_chegada)
 
-
+# fila
 def eventoSA(evento):
     global fila
     # contabiliza
@@ -84,6 +86,8 @@ def eventoSA(evento):
     fila -= 1
     if fila >= 1:
         agenda_saida(evento['tempo'],(max_saida - min_saida) * congruente_linear() + min_saida)
+        # agenda saida para alguma lugar, tanto pra fora ou pra outra fila
+        
 
 i = 0
 while True:
@@ -102,6 +106,7 @@ for i in estados.items():
 for i in range(k+1):
     estados[i] = estados[i] / N * 100
 print(estados)
+
 {print('{0:.2f}%'.format(i)) for i in estados.values()}
 print('perda : {}'.format(perda))
 
