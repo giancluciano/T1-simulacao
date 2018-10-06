@@ -2,18 +2,18 @@ from time import sleep
 
 # variaveis da fila
 fila = 0
-k = 10 # tamanho da fila 
+k = 10  # tamanho da fila
+
 
 interacoes = 10000
 perda = 0
 # agenda de eventos
 eventos = [
-    # Comentei esta linha, ja que o pipe faz um TypeError ao usar strings
     {'evento': 'ch', 'tempo': 1, 'sorteio': 1},
 ]
 
 estados = {}
-for i in range(k+1):
+for i in range(k + 1):
     estados[i] = 0
 
 # parametros para aleatorios
@@ -52,7 +52,8 @@ def agenda_saida(tempo, sorteio):
 def start():
     agenda_chegada(0, 2.5)
 
-# fila
+
+#  fila
 def get_next_evento():
     global eventos
     next_evento = eventos.pop(0)
@@ -63,31 +64,33 @@ def get_next_evento():
             eventos.remove(evento)
     return next_evento
 
-# fila
+
+#  fila
 def eventoCH(evento):
     global fila, perda
-    # contabiliza 
+    # contabiliza
     print('chegada, fila:' + str(fila+1) + ' no tempo - ' + str(evento['tempo']))
     if fila < k:
         estados[fila] = estados[fila] + evento['sorteio']
         fila += 1
         if fila <= 1:
-            agenda_saida(evento['tempo'],(max_saida - min_saida) * congruente_linear() + min_saida)
+            agenda_saida(evento['tempo'], (max_saida - min_saida) * congruente_linear() + min_saida)
     else:
         perda += 1
     agenda_chegada(evento['tempo'], (max_chegada - min_chegada) * congruente_linear() + min_chegada)
 
-# fila
+
+#  fila
 def eventoSA(evento):
     global fila
-    # contabiliza
+    #  contabiliza
     print('saindo, fila:' + str(fila+1) + ' no tempo - ' + str(evento['tempo']))
     estados[fila] = estados[fila] + evento['sorteio']
     fila -= 1
     if fila >= 1:
-        agenda_saida(evento['tempo'],(max_saida - min_saida) * congruente_linear() + min_saida)
-        # agenda saida para alguma lugar, tanto pra fora ou pra outra fila
-        
+        agenda_saida(evento['tempo'], (max_saida - min_saida) * congruente_linear() + min_saida)
+        #  agenda saida para alguma lugar, tanto pra fora ou pra outra fila
+
 
 i = 0
 while True:
@@ -115,5 +118,3 @@ print('perda : {}'.format(perda))
 # while True:
 #     print(quantidade_iteracoes, ' - ', congruente_linear())
 #     sleep(0.01)
-
-
