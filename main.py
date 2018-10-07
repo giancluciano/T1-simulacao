@@ -7,10 +7,6 @@ eventos = [
 ]
 
 
-def start():
-    agenda_chegada(0, 2.5)
-
-
 def get_next_evento():
     global eventos
     next_evento = eventos.pop(0)
@@ -20,6 +16,7 @@ def get_next_evento():
             next_evento = evento
             eventos.remove(evento)
     return next_evento
+
 
 gerador = Gerador()
 capacidade_fila_1 = 10

@@ -16,7 +16,7 @@ class Fila:
             self.estados[i] = 0
 
     def contabiliza_evento_chegada(self, evento, agenda_de_eventos, gerador):
-        print('chegada, posicao_na_fila:' + str(self.posicao_na_fila + 1) + ' no tempo - ' + str(evento['tempo']))
+        print('chegada, posicao_na_fila: {0} no tempo {1}'.format(self.posicao_na_fila + 1, evento['tempo']))
         if self.posicao_na_fila < self.capacidade_fila:
             self.estados[self.posicao_na_fila] += evento['sorteio']
             self.posicao_na_fila += 1
@@ -29,7 +29,7 @@ class Fila:
         self.agenda_chegada(evento['tempo'], sorteio, agenda_de_eventos)
 
     def contabiliza_evento_saida(self, evento, agenda_de_eventos, gerador):
-        print('saindo, posicao_na_fila:' + str(self.posicao_na_fila + 1) + ' no tempo - ' + str(evento['tempo']))
+        print('saindo, posicao_na_fila: {0} no tempo {1}'.format(self.posicao_na_fila + 1, evento['tempo']))
         self.estados[self.posicao_na_fila] = self.estados[self.posicao_na_fila] + evento['sorteio']
         self.posicao_na_fila -= 1
         if self.posicao_na_fila >= 1:
