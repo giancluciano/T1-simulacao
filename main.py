@@ -1,11 +1,11 @@
 from time import sleep
 
 # variaveis da fila
-fila = 0
-k = 10  # tamanho da fila
+posicao_na_fila = 0
+capacidade_fila = 10
 
 
-interacoes = 10000
+iteracoes = 10000
 perda = 0
 # agenda de eventos
 eventos = [
@@ -13,7 +13,7 @@ eventos = [
 ]
 
 estados = {}
-for i in range(k + 1):
+for i in range(capacidade_fila + 1):
     estados[i] = 0
 
 # parametros para aleatorios
@@ -66,14 +66,13 @@ def get_next_evento():
 
 
 #  fila
-def eventoCH(evento):
-    global fila, perda
-    # contabiliza
-    print('chegada, fila:' + str(fila+1) + ' no tempo - ' + str(evento['tempo']))
-    if fila < k:
-        estados[fila] = estados[fila] + evento['sorteio']
-        fila += 1
-        if fila <= 1:
+def contabiliza_evento_chegada(evento):
+    global posicao_na_fila, perda
+    print('chegada, posicao_na_fila:' + str(posicao_na_fila + 1) + ' no tempo - ' + str(evento['tempo']))
+    if posicao_na_fila < capacidade_fila:
+        estados[posicao_na_fila] = estados[posicao_na_fila] + evento['sorteio']
+        posicao_na_fila += 1
+        if posicao_na_fila <= 1:
             agenda_saida(evento['tempo'], (max_saida - min_saida) * congruente_linear() + min_saida)
     else:
         perda += 1
@@ -81,32 +80,31 @@ def eventoCH(evento):
 
 
 #  fila
-def eventoSA(evento):
-    global fila
-    #  contabiliza
-    print('saindo, fila:' + str(fila+1) + ' no tempo - ' + str(evento['tempo']))
-    estados[fila] = estados[fila] + evento['sorteio']
-    fila -= 1
-    if fila >= 1:
+def contabiliza_evento_saida(evento):
+    global posicao_na_fila
+    print('saindo, posicao_na_fila:' + str(posicao_na_fila + 1) + ' no tempo - ' + str(evento['tempo']))
+    estados[posicao_na_fila] = estados[posicao_na_fila] + evento['sorteio']
+    posicao_na_fila -= 1
+    if posicao_na_fila >= 1:
         agenda_saida(evento['tempo'], (max_saida - min_saida) * congruente_linear() + min_saida)
         #  agenda saida para alguma lugar, tanto pra fora ou pra outra fila
 
 
-i = 0
+iteracao_atual = 0
 while True:
-    if i >= interacoes:
+    if iteracao_atual >= iteracoes:
         break
-    i += 1
+    iteracao_atual += 1
     next_evento = get_next_evento()
     if next_evento['evento'] == 'ch':
-        eventoCH(next_evento)
+        contabiliza_evento_chegada(next_evento)
     else:
-        eventoSA(next_evento)
+        contabiliza_evento_saida(next_evento)
 
 N = 0
 for i in estados.items():
     N += i[1]
-for i in range(k+1):
+for i in range(capacidade_fila + 1):
     estados[i] = estados[i] / N * 100
 print(estados)
 
