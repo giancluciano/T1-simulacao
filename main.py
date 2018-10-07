@@ -1,3 +1,4 @@
+from gerador_numeros_aleatorios import Gerador
 from time import sleep
 
 # variaveis da fila
@@ -23,23 +24,7 @@ min_chegada = 3
 max_saida = 8
 min_saida = 3
 
-# variaveis usadas na geracao de numeros aleatorios
-x_anterior = 19
-M = 4493
-a = 500
-c = 4
-quantidade_iteracoes = 0
-
-
-def congruente_linear():
-    global x_anterior, M, c, a, quantidade_iteracoes
-    quantidade_iteracoes = quantidade_iteracoes + 1
-    # Resto da divisao em python 3 usamos o %. Se python 2, / direto
-    x_atual = (a * x_anterior + c) % M
-    x_anterior = x_atual
-    # Divisao no python 3 usamos /. Se python 2, precisa fazer um cast para float/Decimal
-    return x_atual / M
-
+gerador = Gerador()
 
 def agenda_chegada(tempo, sorteio):
     eventos.append({'evento': 'ch', 'tempo': tempo + sorteio, 'sorteio': sorteio})
@@ -73,10 +58,10 @@ def contabiliza_evento_chegada(evento):
         estados[posicao_na_fila] = estados[posicao_na_fila] + evento['sorteio']
         posicao_na_fila += 1
         if posicao_na_fila <= 1:
-            agenda_saida(evento['tempo'], (max_saida - min_saida) * congruente_linear() + min_saida)
+            agenda_saida(evento['tempo'], (max_saida - min_saida) * gerador.congruente_linear() + min_saida)
     else:
         perda += 1
-    agenda_chegada(evento['tempo'], (max_chegada - min_chegada) * congruente_linear() + min_chegada)
+    agenda_chegada(evento['tempo'], (max_chegada - min_chegada) * gerador.congruente_linear() + min_chegada)
 
 
 #  fila
@@ -86,7 +71,7 @@ def contabiliza_evento_saida(evento):
     estados[posicao_na_fila] = estados[posicao_na_fila] + evento['sorteio']
     posicao_na_fila -= 1
     if posicao_na_fila >= 1:
-        agenda_saida(evento['tempo'], (max_saida - min_saida) * congruente_linear() + min_saida)
+        agenda_saida(evento['tempo'], (max_saida - min_saida) * gerador.congruente_linear() + min_saida)
         #  agenda saida para alguma lugar, tanto pra fora ou pra outra fila
 
 
@@ -101,18 +86,15 @@ while True:
     else:
         contabiliza_evento_saida(next_evento)
 
+# Obtem o tempo total da simulacao
 N = 0
 for i in estados.items():
     N += i[1]
+
+# Calcula o tempo percentual em cada estado
 for i in range(capacidade_fila + 1):
     estados[i] = estados[i] / N * 100
 print(estados)
 
 {print('{0:.2f}%'.format(i)) for i in estados.values()}
 print('perda : {}'.format(perda))
-
-
-# Teste do gerador de numero aleatorios
-# while True:
-#     print(quantidade_iteracoes, ' - ', congruente_linear())
-#     sleep(0.01)
