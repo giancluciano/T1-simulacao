@@ -1,4 +1,5 @@
 from fila import Fila
+from gerador_numeros_aleatorios import Gerador
 
 iteracoes = 10000
 eventos = [
@@ -20,6 +21,7 @@ def get_next_evento():
             eventos.remove(evento)
     return next_evento
 
+gerador = Gerador()
 capacidade_fila_1 = 10
 fila1 = Fila(capacidade_fila_1)
 iteracao_atual = 0
@@ -29,9 +31,9 @@ while True:
     iteracao_atual += 1
     next_evento = get_next_evento()
     if next_evento['evento'] == 'ch':
-        fila1.contabiliza_evento_chegada(next_evento, eventos)
+        fila1.contabiliza_evento_chegada(next_evento, eventos, gerador)
     else:
-        fila1.contabiliza_evento_saida(next_evento, eventos)
+        fila1.contabiliza_evento_saida(next_evento, eventos, gerador)
 
 # Obtem o tempo total da simulacao
 N = 0
