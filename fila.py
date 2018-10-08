@@ -3,15 +3,21 @@ class Fila:
     capacidade_fila = None
     perda = 0
     estados = {}
+    entrada = True
+    saida = None
 
     max_chegada = 10
     min_chegada = 3
     max_saida = 8
     min_saida = 3
 
-    def __init__(self, capacidade):
+    # entrada é um valor boolean que indica quando a fila recebe evento de fora
+    # adicionando parametro de saida, podendo ser null ou recebendo uma outra fila
+    # num futuro isso pode receber uma lista de saídas e suas porcentagens
+    def __init__(self, entrada, capacidade, saida):
         self.capacidade_fila = capacidade
-
+        self.saida = saida
+        self.entrada = entrada
         for i in range(self.capacidade_fila + 1):
             self.estados[i] = 0
 
@@ -38,7 +44,10 @@ class Fila:
             #  agenda saida para alguma lugar, tanto pra fora ou pra outra fila
 
     def agenda_chegada(self, tempo, sorteio, agenda_de_eventos):
-        agenda_de_eventos.append({'evento': 'ch', 'tempo': tempo + sorteio, 'sorteio': sorteio})
+        if self.entrada:
+            agenda_de_eventos.append({'evento': 'ch', 'tempo': tempo + sorteio, 'sorteio': sorteio,'fila': self})
 
     def agenda_saida(self, tempo, sorteio, agenda_de_eventos):
-        agenda_de_eventos.append({'evento': 'sa', 'tempo': tempo + sorteio, 'sorteio': sorteio})
+        agenda_de_eventos.append({'evento': 'sa', 'tempo': tempo + sorteio, 'sorteio': sorteio,'fila': self})
+        if self.saida is not None:
+            agenda_de_eventos.append({'evento': 'ch', 'tempo': tempo + sorteio, 'sorteio': sorteio,'fila': self.saida}) # cria uma chegada para outra fila, se tiver

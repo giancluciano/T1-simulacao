@@ -1,9 +1,15 @@
 from fila import Fila
 from gerador_numeros_aleatorios import Gerador
 
+gerador = Gerador()
+capacidade_fila_1 = 10
+fila2 = Fila(False, capacidade_fila_1, None)
+fila1 = Fila(True, capacidade_fila_1, fila2)
+
 iteracoes = 10000
+# adcionado campo que aponta a fila qual vai receber o evento
 eventos = [
-    {'evento': 'ch', 'tempo': 1, 'sorteio': 1},
+    {'evento': 'ch', 'tempo': 1, 'sorteio': 1, 'fila': fila1},
 ]
 
 
@@ -17,10 +23,6 @@ def get_next_evento():
             eventos.remove(evento)
     return next_evento
 
-
-gerador = Gerador()
-capacidade_fila_1 = 10
-fila1 = Fila(capacidade_fila_1)
 iteracao_atual = 0
 while True:
     if iteracao_atual >= iteracoes:
@@ -28,9 +30,9 @@ while True:
     iteracao_atual += 1
     next_evento = get_next_evento()
     if next_evento['evento'] == 'ch':
-        fila1.contabiliza_evento_chegada(next_evento, eventos, gerador)
+        next_evento['fila'].contabiliza_evento_chegada(next_evento, eventos, gerador)
     else:
-        fila1.contabiliza_evento_saida(next_evento, eventos, gerador)
+        next_evento['fila'].contabiliza_evento_saida(next_evento, eventos, gerador)
 
 # Obtem o tempo total da simulacao
 N = 0
@@ -43,4 +45,5 @@ for i in range(capacidade_fila_1 + 1):
 print(fila1.estados)
 
 {print('{0:.2f}%'.format(i)) for i in fila1.estados.values()}
+{print('{0:.2f}%'.format(i)) for i in fila2.estados.values()}
 print('perda : {}'.format(fila1.perda))
