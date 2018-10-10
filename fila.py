@@ -42,7 +42,7 @@ class Fila:
 
     def contabiliza_evento_saida(self, evento, agenda_de_eventos, gerador):
         print('saindo, posicao_na_fila: {0} no tempo {1}'.format(self.posicao_na_fila + 1, evento['tempo']))
-        self.estados[self.posicao_na_fila] = self.estados[self.posicao_na_fila] + evento['sorteio']
+        self.estados[self.posicao_na_fila] += evento['sorteio']
         self.posicao_na_fila -= 1
         if self.posicao_na_fila >= 1:
             sorteio = (self.max_saida - self.min_saida) * gerador.congruente_linear() + self.min_saida

@@ -1,13 +1,15 @@
 from fila import Fila
 from gerador_numeros_aleatorios import Gerador
+from leitor import Leitor
 
+leitor = Leitor()
 gerador = Gerador()
 capacidade_fila_1 = 10
 fila2 = Fila('fila2', False, capacidade_fila_1, None, (1,4), (2,8))
 fila1 = Fila('fila1', True, capacidade_fila_1, fila2, (2,4), (2,5))
 
 iteracoes = 10000
-# adcionado campo que aponta a fila qual vai receber o evento
+# adicionado campo que aponta a fila qual vai receber o evento
 eventos = [
     {'evento': 'ch', 'tempo': 1, 'sorteio': 1, 'fila': fila1},
 ]
