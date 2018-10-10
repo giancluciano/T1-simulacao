@@ -23,6 +23,7 @@ class Fila:
         self.nome = nome
         self.chegada = chegada
         self.saida = saida
+        self.estados = {}
         for i in range(self.capacidade_fila + 1):
             self.estados[i] = 0
 

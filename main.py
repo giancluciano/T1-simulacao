@@ -34,11 +34,20 @@ while True:
     else:
         next_evento['fila'].contabiliza_evento_saida(next_evento, eventos, gerador)
 
+
+# Calcula o tempo percentual em cada estado
+
+
 # Obtem o tempo total da simulacao
 N = 0
 for i in fila1.estados.items():
     N += i[1]
 
+for i in range(capacidade_fila_1 + 1):
+    fila1.estados[i] = fila1.estados[i] / N * 100
+
+for i in range(capacidade_fila_1 + 1):
+    fila2.estados[i] = fila2.estados[i] / N * 100
 
 {print('fila 1 estado {0}: {1:.2f}%'.format(i[0],i[1])) for i in fila1.estados.items()}
 {print('fila 2  estado {0}: {1:.2f}%'.format(i[0],i[1]))for i in fila2.estados.items()}
