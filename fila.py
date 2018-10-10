@@ -1,28 +1,33 @@
 class Fila:
     posicao_na_fila = 0
-    capacidade_fila = None
+    capacidade_fila = 10
     perda = 0
     estados = {}
-    entrada = True
-    saida = None
+    inicio = True
+    fila_saida = None
+    nome = ''
+    chegada = (2,4)
+    saida = (2,4)
+    min_chegada = chegada[0]
+    max_chegada = chegada[1]
+    min_saida = saida[0]
+    max_saida = saida[1]
 
-    max_chegada = 10
-    min_chegada = 3
-    max_saida = 8
-    min_saida = 3
-
-    # entrada é um valor boolean que indica quando a fila recebe evento de fora
+    # inicio é um valor boolean que indica quando a fila recebe evento de fora
     # adicionando parametro de saida, podendo ser null ou recebendo uma outra fila
     # num futuro isso pode receber uma lista de saídas e suas porcentagens
-    def __init__(self, entrada, capacidade, saida):
+    def __init__(self, nome, inicio, capacidade, fila_saida,chegada,saida):
         self.capacidade_fila = capacidade
+        self.fila_saida = fila_saida
+        self.inicio = inicio
+        self.nome = nome
+        self.chegada = chegada
         self.saida = saida
-        self.entrada = entrada
         for i in range(self.capacidade_fila + 1):
             self.estados[i] = 0
 
     def contabiliza_evento_chegada(self, evento, agenda_de_eventos, gerador):
-        print('chegada, posicao_na_fila: {0} no tempo {1}'.format(self.posicao_na_fila + 1, evento['tempo']))
+        print('chegada na {0}, posicao_na_fila: {1} no tempo {2}'.format(evento['fila'].nome,self.posicao_na_fila + 1, evento['tempo']))
         if self.posicao_na_fila < self.capacidade_fila:
             self.estados[self.posicao_na_fila] += evento['sorteio']
             self.posicao_na_fila += 1
@@ -44,10 +49,10 @@ class Fila:
             #  agenda saida para alguma lugar, tanto pra fora ou pra outra fila
 
     def agenda_chegada(self, tempo, sorteio, agenda_de_eventos):
-        if self.entrada:
+        if self.inicio:
             agenda_de_eventos.append({'evento': 'ch', 'tempo': tempo + sorteio, 'sorteio': sorteio,'fila': self})
 
     def agenda_saida(self, tempo, sorteio, agenda_de_eventos):
         agenda_de_eventos.append({'evento': 'sa', 'tempo': tempo + sorteio, 'sorteio': sorteio,'fila': self})
-        if self.saida is not None:
-            agenda_de_eventos.append({'evento': 'ch', 'tempo': tempo + sorteio, 'sorteio': sorteio,'fila': self.saida}) # cria uma chegada para outra fila, se tiver
+        if self.fila_saida is not None:
+            agenda_de_eventos.append({'evento': 'ch', 'tempo': tempo + sorteio, 'sorteio': sorteio,'fila': self.fila_saida}) # cria uma chegada para outra fila, se tiver

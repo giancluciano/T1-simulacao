@@ -3,8 +3,8 @@ from gerador_numeros_aleatorios import Gerador
 
 gerador = Gerador()
 capacidade_fila_1 = 10
-fila2 = Fila(False, capacidade_fila_1, None)
-fila1 = Fila(True, capacidade_fila_1, fila2)
+fila2 = Fila('fila2', False, capacidade_fila_1, None, (1,4), (2,8))
+fila1 = Fila('fila1', True, capacidade_fila_1, fila2, (2,4), (2,5))
 
 iteracoes = 10000
 # adcionado campo que aponta a fila qual vai receber o evento
@@ -39,11 +39,7 @@ N = 0
 for i in fila1.estados.items():
     N += i[1]
 
-# Calcula o tempo percentual em cada estado
-for i in range(capacidade_fila_1 + 1):
-    fila1.estados[i] = fila1.estados[i] / N * 100
-print(fila1.estados)
 
-{print('{0:.2f}%'.format(i)) for i in fila1.estados.values()}
-{print('{0:.2f}%'.format(i)) for i in fila2.estados.values()}
+{print('fila 1 estado {0}: {1:.2f}%'.format(i[0],i[1])) for i in fila1.estados.items()}
+{print('fila 2  estado {0}: {1:.2f}%'.format(i[0],i[1]))for i in fila2.estados.items()}
 print('perda : {}'.format(fila1.perda))
