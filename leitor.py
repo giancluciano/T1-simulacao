@@ -14,14 +14,14 @@ class Leitor:
 
                 for fila_destino in range(1, quantidade_de_filas + 1):
                     linha = input_file.readline().strip()
-                    import pdb
-                    pdb.set_trace()
+                    #import pdb
+                    #pdb.set_trace()
                     linha = linha.replace('P{0}{1} '.format(fila_atual, fila_destino), '')
                     nova_fila['probabilidades'].append(float(linha))
 
                 linha = input_file.readline().strip()
                 probabilidade_saida = linha.replace('P{0}F '.format(fila_atual, fila_destino), '')
-                nova_fila['probabilidade_saida'] = float(probabilidade_saida)
+                nova_fila['probabilidades'].append(float(probabilidade_saida))
 
                 linha = input_file.readline().strip()
                 probabilidade_continuar = linha.replace('P{0}C '.format(fila_atual, fila_destino), '')
