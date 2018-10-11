@@ -14,8 +14,6 @@ class Leitor:
 
                 for fila_destino in range(1, quantidade_de_filas + 1):
                     linha = input_file.readline().strip()
-                    #import pdb
-                    #pdb.set_trace()
                     linha = linha.replace('P{0}{1} '.format(fila_atual, fila_destino), '')
                     nova_fila['probabilidades'].append(float(linha))
 

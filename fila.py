@@ -19,7 +19,7 @@ class Fila:
     # inicio é um valor boolean que indica quando a fila recebe evento de fora
     # adicionando parametro de saida, podendo ser null ou recebendo uma outra fila
     # num futuro isso pode receber uma lista de saídas e suas porcentagens
-    def __init__(self, nome, capacidade, servidores, fila_saida,chegada,saida):
+    def __init__(self, nome, capacidade, servidores, fila_saida, chegada, saida):
         self.capacidade_fila = capacidade
         self.fila_saida = fila_saida
         self.nome = nome
@@ -32,7 +32,7 @@ class Fila:
 
     def set_inicio(self, inicio):
         self.inicio = inicio
-        
+
     def get_saida(self):
         retorno = random.choices(range(0,len(self.fila_saida)), self.fila_saida)
         print(retorno[0])
@@ -67,5 +67,5 @@ class Fila:
     def agenda_saida(self, tempo, sorteio, agenda_de_eventos):
         agenda_de_eventos.append({'evento': 'sa', 'tempo': tempo + sorteio, 'sorteio': sorteio,'fila': self.nome})
         next_fila = self.get_saida()
-        if self.fila_saida is not None and next_fila != len(self.fila_saida) - 1: # desculpa a gambi, são 2 da manha
+        if self.fila_saida is not None and next_fila != len(self.fila_saida) - 1:
             agenda_de_eventos.append({'evento': 'ch', 'tempo': tempo + sorteio, 'sorteio': sorteio,'fila': next_fila}) # cria uma chegada para outra fila, se tiver
