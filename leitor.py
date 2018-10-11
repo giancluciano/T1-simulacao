@@ -22,10 +22,6 @@ class Leitor:
                 nova_fila['probabilidades'].append(float(probabilidade_saida))
 
                 linha = input_file.readline().strip()
-                probabilidade_continuar = linha.replace('P{0}C '.format(fila_atual, fila_destino), '')
-                nova_fila['probabilidade_continuar'] = float(probabilidade_continuar)
-
-                linha = input_file.readline().strip()
                 servidores = linha.replace('C ', '')
                 nova_fila['servidores'] = int(servidores)
 
