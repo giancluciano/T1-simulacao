@@ -5,8 +5,8 @@ from leitor import Leitor
 leitor = Leitor()
 gerador = Gerador()
 capacidade_fila_1 = 10
-fila2 = Fila('fila2', False, capacidade_fila_1, None, (1,4), (2,8))
-fila1 = Fila('fila1', True, capacidade_fila_1, fila2, (2,4), (2,5))
+fila2 = Fila('fila2', False, capacidade_fila_1, 1, None, (1,4), (2,8))
+fila1 = Fila('fila1', True, capacidade_fila_1, 1, fila2, (2,4), (2,5))
 
 iteracoes = 10000
 # adicionado campo que aponta a fila qual vai receber o evento
@@ -15,6 +15,7 @@ eventos = [
 ]
 
 
+# busca o próximo evento dentro da agenda
 def get_next_evento():
     global eventos
     next_evento = eventos.pop(0)
@@ -25,6 +26,7 @@ def get_next_evento():
             eventos.remove(evento)
     return next_evento
 
+# faz a simulação, tirando o evento da agenda e passando para a fila
 iteracao_atual = 0
 while True:
     if iteracao_atual >= iteracoes:
