@@ -48,6 +48,7 @@ N = get_next_evento()['tempo']
 
 # Calcula o tempo percentual em cada estado
 for fila in filas:
+    print(sum(fila.estados))
     fila.estados = { k:fila.estados[i] / N * 100 for k, i in enumerate(fila.estados)}
 
 # Apresenta os resultados

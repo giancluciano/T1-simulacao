@@ -15,6 +15,7 @@ class Fila:
     min_saida = saida[0]
     max_saida = saida[1]
     servidores = None
+    ultimo_tempo = 0
 
     # inicio é um valor boolean que indica quando a fila recebe evento de fora
     # adicionando parametro de saida, podendo ser null ou recebendo uma outra fila
@@ -41,7 +42,8 @@ class Fila:
     def contabiliza_evento_chegada(self, evento, agenda_de_eventos, gerador):
         print('chegada na {0}, posicao_na_fila: {1} no tempo {2}'.format(self.nome,self.posicao_na_fila + 1, evento['tempo']))
         if self.posicao_na_fila < self.capacidade_fila:
-            self.estados[self.posicao_na_fila] += evento['sorteio']
+            self.estados[self.posicao_na_fila] += evento['tempo'] - self.ultimo_tempo
+            self.ultimo_tempo = evento['tempo']
             self.posicao_na_fila += 1
             if self.posicao_na_fila <= self.servidores:
                 sorteio = (self.max_saida - self.min_saida) * gerador.congruente_linear() + self.min_saida
@@ -53,7 +55,8 @@ class Fila:
 
     def contabiliza_evento_saida(self, evento, agenda_de_eventos, gerador):
         print('saindo, posicao_na_fila: {0} no tempo {1}'.format(self.posicao_na_fila + 1, evento['tempo']))
-        self.estados[self.posicao_na_fila] += evento['sorteio']
+        self.estados[self.posicao_na_fila] += evento['tempo'] - self.ultimo_tempo
+        self.ultimo_tempo = evento['tempo']
         self.posicao_na_fila -= 1
         if self.posicao_na_fila >= self.servidores:
             sorteio = (self.max_saida - self.min_saida) * gerador.congruente_linear() + self.min_saida
